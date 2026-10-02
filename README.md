@@ -73,6 +73,17 @@ Alignment is preserved when a cell also uses a date or datetime format.
 Sheets accept `mergeCells: ["A1:D1", "B2:D2"]` to merge cell ranges.
 Place the value in the top-left cell of each range.
 
+Use `showGridLines: false` to hide worksheet grid lines, with or without `freeze`.
+Print layout is configured on the sheet:
+
+```javascript
+pageMargins: { left: 0.3, right: 0.3, top: 0.4, bottom: 0.4, header: 0.2, footer: 0.2 },
+pageSetup: { paperSize: 9, orientation: "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 0 }
+```
+
+Margins are in inches; `paperSize: 9` selects A4.
+`fitToPage: true` enables the fit settings; a zero height allows multiple pages.
+
 ## Contributing
 
 Follow [Coding Style Guide](https://github.com/litejs/litejs/wiki/Style-Guide),

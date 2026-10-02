@@ -85,6 +85,9 @@ export interface FreezeDef {
 }
 
 export interface SheetObject {
+	showGridLines?: boolean
+	pageMargins?: PageMarginsDef
+	pageSetup?: PageSetupDef
 	mergeCells?: string[]
 	name?: string
 	cols?: string | ColDef[]
@@ -93,6 +96,24 @@ export interface SheetObject {
 }
 
 export type Sheet = CellValue[][] | SheetObject
+
+export interface PageMarginsDef {
+	left: number
+	right: number
+	top: number
+	bottom: number
+	header: number
+	footer: number
+}
+
+export interface PageSetupDef {
+	paperSize?: number
+	orientation?: "default" | "portrait" | "landscape"
+	fitToPage?: boolean
+	fitToWidth?: number
+	fitToHeight?: number
+	scale?: number
+}
 
 export interface Workbook {
 	formulas?: boolean

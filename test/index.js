@@ -4,6 +4,40 @@ describe("xlsx", function() {
 	var { createFiles, createXlsx } = require("..")
 	, compressionSuported = typeof CompressionStream !== "undefined" && typeof Response !== "undefined"
 
+	test("worksheet views and page layout", function(assert, mock) {
+		mock.swap(Date, 'now', mock.fn(1514900750001))
+		var workbook = {
+			formulas: false,
+			styles: { Report: { alignment: { vertical: 'center', wrapText: true } } },
+			sheets: [{
+				data: [[{ style: 'Report', value: '=Title' }, null]],
+				mergeCells: ['A1:B1'],
+				showGridLines: false,
+				pageMargins: { left: 0.3, right: 0.3, top: 0.4, bottom: 0.4, header: 0.2, footer: 0.2 },
+				pageSetup: { paperSize: 9, orientation: 'portrait', fitToPage: true, fitToWidth: 1, fitToHeight: 0 }
+			}, {
+				data: [], showGridLines: true, freeze: { rows: 1 },
+				pageSetup: { orientation: 'landscape', fitToPage: false }
+			}, { data: [], pageSetup: { scale: 80 } }]
+		}
+		, files = createFiles(workbook)
+		, sheet = files.find(f => f.name === 'xl/worksheets/sheet1.xml').content
+		, frozen = files.find(f => f.name === 'xl/worksheets/sheet2.xml').content
+		, scaled = files.find(f => f.name === 'xl/worksheets/sheet3.xml').content
+		assert.ok(sheet.includes('<sheetPr><pageSetUpPr fitToPage="true"/></sheetPr><dimension'), 'sheet properties precede dimension')
+		assert.ok(sheet.includes('<sheetView workbookViewId="0" showGridLines="false"/>'), 'view without freeze')
+		assert.ok(frozen.includes('showGridLines="true"><pane'), 'view combined with freeze')
+		assert.ok(frozen.includes('fitToPage="false"'), 'fitToPage false preserved')
+		assert.ok(scaled.includes('<pageSetup scale="80"/>') && !scaled.includes('<sheetPr'), 'page setup without fitToPage')
+		assert.ok(sheet.includes('</mergeCells><pageMargins left="0.3" right="0.3" top="0.4" bottom="0.4" header="0.2" footer="0.2"/><pageSetup paperSize="9" orientation="portrait" fitToWidth="1" fitToHeight="0"/>'), 'page layout follows merges in schema order')
+		assert.matchSnapshot('test/snap/report.json', JSON.stringify(files, null, 2))
+		if (!compressionSuported) return assert.end()
+		createXlsx(workbook).then(uint8 => {
+			assert.matchSnapshot('test/snap/report.xlsx', uint8)
+			assert.end()
+		})
+	})
+
 	test("merged cells", function(assert) {
 		var files = createFiles({ sheets: [
 			{ data: [['Title', null, null], ['Subtitle']], mergeCells: ['A1:C1', 'A2:C2'] },

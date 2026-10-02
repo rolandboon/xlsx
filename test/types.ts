@@ -11,6 +11,9 @@ var workbook: Workbook = {
 		{
 			name: "Products",
 			mergeCells: ["A1:C1"],
+			showGridLines: false,
+			pageMargins: { left: 0.3, right: 0.3, top: 0.4, bottom: 0.4, header: 0.2, footer: 0.2 },
+			pageSetup: { paperSize: 9, orientation: "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 0 },
 			cols: [{ width: 20, bestFit: true, customWidth: true }, 0, "15"],
 			freeze: { rows: 1, cols: 0 },
 			data: [

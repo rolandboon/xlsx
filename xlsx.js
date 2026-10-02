@@ -109,6 +109,7 @@
 				, freezeRows = freeze && freeze.rows || 0
 				, freezeCols = freeze && freeze.cols || 0
 				, freezePane = freeze && (freezeRows ? 'bottom' : 'top') + (freezeCols ? 'Right' : 'Left')
+				, pageSetup = sheet.pageSetup
 				, name = 'worksheets/sheet' + i + '.xml'
 				, sheetData = sheet.data.map(
 					row => (++rowIndex, row = dataArr(row)) ? toXml('row', {
@@ -140,24 +141,30 @@
 					name: 'xl/' + name,
 					content: xmlHead +
 						'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+						(pageSetup && pageSetup.fitToPage !== UNDEF ? toXml('sheetPr', 0, {
+							pageSetUpPr: [{ fitToPage: pageSetup.fitToPage }]
+						}) : '') +
 						(width ? '<dimension ref="A1:' + toCol(width - 1) + sheet.data.length + '"/>' : '') +
-						(freeze ?
-						'<sheetViews>' + toXml('sheetView', { workbookViewId: 0 }, {
-							pane: [{
+						(freeze || sheet.showGridLines !== UNDEF ?
+						'<sheetViews>' + toXml('sheetView', { workbookViewId: 0, showGridLines: sheet.showGridLines }, {
+							pane: freeze ? [{
 								xSplit: freezeCols || UNDEF,
 								ySplit: freezeRows || UNDEF,
 								topLeftCell: toCol(freezeCols) + (freezeRows + 1),
 								activePane: freezePane,
 								state: 'frozen'
-							}],
-							selection: [{ pane: freezePane }]}) + '</sheetViews>' : '') +
+							}] : UNDEF,
+							selection: freeze ? [{ pane: freezePane }] : UNDEF }) + '</sheetViews>' : '') +
 						(cols ? toXml('cols', 0, { col: (isStr(cols) ? cols.split(',') : cols).map(
 							(w, col) => w ? assign({ min: col + 1, max: col + 1 }, isStr(w) ? { width: w, customWidth: 1 } : w) : 0
 						).filter(isTruthy)}) : '') +
 						'<sheetData>' + sheetData + '</sheetData>' +
 						(sheet.mergeCells && sheet.mergeCells.length ? toXml('mergeCells', { count: sheet.mergeCells.length }, {
 							mergeCell: sheet.mergeCells.map(ref => ({ ref }))
-						}) : '') + '</worksheet>'
+						}) : '') +
+						(sheet.pageMargins ? toXml('pageMargins', sheet.pageMargins) : '') +
+						(pageSetup ? toXml('pageSetup', assign({}, pageSetup, { fitToPage: UNDEF })) : '') +
+						'</worksheet>'
 				}
 			}
 		)
