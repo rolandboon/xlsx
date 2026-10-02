@@ -3,7 +3,7 @@ import { createFiles, createXlsx, Workbook, XlsxFile } from ".."
 var workbook: Workbook = {
 	formulas: false,
 	styles: {
-		bold: { font: { sz: 11, name: "Calibri", b: true } },
+		bold: { font: { sz: 11, name: "Calibri", b: true }, alignment: { vertical: "center", wrapText: true } },
 		border: { border: "thin" },
 		fill: { fill: "FFFF00" },
 	},

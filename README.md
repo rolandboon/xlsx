@@ -66,6 +66,10 @@ To export untrusted text, set `formulas: false` on the workbook.
 Strings starting with `=` are then literal text, including styled cells.
 The default retains formula detection for existing workbooks.
 
+Styles accept an `alignment` object, for example
+`{ alignment: { vertical: "center", wrapText: true } }`.
+Alignment is preserved when a cell also uses a date or datetime format.
+
 ## Contributing
 
 Follow [Coding Style Guide](https://github.com/litejs/litejs/wiki/Style-Guide),
