@@ -4,6 +4,20 @@ describe("xlsx", function() {
 	var { createFiles, createXlsx } = require("..")
 	, compressionSuported = typeof CompressionStream !== "undefined" && typeof Response !== "undefined"
 
+	test("disable formulas for untrusted text", function(assert) {
+		var files = createFiles({
+			formulas: false,
+			sheets: [[['=SUM(A1:A2)', { style: 'bold', value: '=1+1' }, '+1', '-1', '@SUM(A1)', 2]]]
+		})
+		, sheet = files.find(f => f.name === 'xl/worksheets/sheet1.xml').content
+		assert.ok(!sheet.includes('<f>'), 'no formula cells emitted')
+		assert.ok(sheet.includes('<t>=SUM(A1:A2)</t>'), 'plain string remains literal')
+		assert.ok(sheet.includes('s="3" t="inlineStr"><is><t>=1+1</t>'), 'styled string remains literal')
+		assert.ok(sheet.includes('<t>+1</t>') && sheet.includes('<t>-1</t>') && sheet.includes('<t>@SUM(A1)</t>'), 'text needs no apostrophe prefix')
+		assert.ok(sheet.includes('<v>2</v>'), 'numeric cells remain numeric')
+		assert.end()
+	})
+
 	test("XML 1.0 characters", function(assert) {
 		var text = 'A\u0000\u0001\u0008\u000b\u000c\u000e\u001f\ud800B\udfff\ufffe\uffffC\t\n\r\ud83d\ude00'
 		, clean = 'ABC\t\n\r\ud83d\ude00'
