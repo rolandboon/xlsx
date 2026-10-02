@@ -85,6 +85,7 @@ export interface FreezeDef {
 }
 
 export interface SheetObject {
+	mergeCells?: string[]
 	name?: string
 	cols?: string | ColDef[]
 	data: (Row | null)[]
