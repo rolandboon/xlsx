@@ -1,0 +1,30 @@
+[
+  {
+    "name": "[Content_Types].xml",
+    "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\"><Default Extension=\"rels\" ContentType=\"application/vnd.openxmlformats-package.relationships+xml\"/><Default Extension=\"xml\" ContentType=\"application/xml\"/><Override PartName=\"/xl/styles.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml\"/><Override PartName=\"/xl/workbook.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml\"/><Override PartName=\"/xl/worksheets/sheet1.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml\"/><Override PartName=\"/xl/worksheets/sheet2.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml\"/></Types>"
+  },
+  {
+    "name": "_rels/.rels",
+    "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument\" Target=\"xl/workbook.xml\"/></Relationships>"
+  },
+  {
+    "name": "xl/_rels/workbook.xml.rels",
+    "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId0\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet\" Target=\"worksheets/sheet1.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet\" Target=\"worksheets/sheet2.xml\"/></Relationships>"
+  },
+  {
+    "name": "xl/styles.xml",
+    "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><styleSheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><numFmts count=\"5\"><numFmt numFmtId=\"164\" formatCode=\"yyyy-mm-dd\"/><numFmt numFmtId=\"165\" formatCode=\"yyyy-mm-dd hh:mm:ss\"/><numFmt numFmtId=\"166\" formatCode=\"#,##0.00\"/><numFmt numFmtId=\"167\" formatCode=\"&quot;€&quot;#,##0.00\"/><numFmt numFmtId=\"168\" formatCode=\"#,##0\"/></numFmts><fonts count=\"3\"><font><sz val=\"11\"/><name val=\"Calibri\"/></font><font><b/><sz val=\"11\"/><name val=\"Calibri\"/></font><font><b/><sz val=\"11\"/><name val=\"Calibri\"/></font></fonts><fills count=\"2\"><fill><patternFill patternType=\"none\"/></fill><fill><patternFill patternType=\"gray125\"/></fill></fills><borders count=\"1\"><border/></borders><cellStyleXfs count=\"1\"><xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\"/></cellStyleXfs><cellXfs count=\"10\"><xf fontId=\"0\" applyFont=\"1\"/><xf numFmtId=\"164\" applyNumberFormat=\"1\"/><xf numFmtId=\"165\" applyNumberFormat=\"1\"/><xf numFmtId=\"0\" fontId=\"1\" applyFont=\"1\"/><xf numFmtId=\"166\" applyNumberFormat=\"1\" fontId=\"2\" applyFont=\"1\"/><xf numFmtId=\"167\" applyNumberFormat=\"1\" fontId=\"0\"/><xf numFmtId=\"166\" applyNumberFormat=\"1\" fontId=\"0\"/><xf numFmtId=\"10\" applyNumberFormat=\"1\" fontId=\"0\"/><xf numFmtId=\"168\" applyNumberFormat=\"1\" fontId=\"0\"/><xf numFmtId=\"164\" applyNumberFormat=\"1\" fontId=\"0\"/></cellXfs><cellStyles count=\"1\"><cellStyle name=\"Normal\" xfId=\"0\" builtinId=\"0\"/></cellStyles></styleSheet>"
+  },
+  {
+    "name": "xl/workbook.xml",
+    "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><workbook xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><sheets><sheet name=\"Fee's records\" sheetId=\"1\" r:id=\"rId1\"/><sheet name=\"Summary\" sheetId=\"2\" r:id=\"rId2\"/></sheets><definedNames><definedName name=\"_xlnm._FilterDatabase\" localSheetId=\"0\" hidden=\"1\">'Fee''s records'!$A$1:$D$3</definedName></definedNames></workbook>"
+  },
+  {
+    "name": "xl/worksheets/sheet1.xml",
+    "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><dimension ref=\"A1:D3\"/><sheetData><row r=\"1\"><c r=\"A1\" t=\"inlineStr\"><is><t>Category</t></is></c><c r=\"B1\" t=\"inlineStr\"><is><t>Amount</t></is></c><c r=\"C1\" t=\"inlineStr\"><is><t>Share</t></is></c><c r=\"D1\" t=\"inlineStr\"><is><t>Count</t></is></c></row><row r=\"2\"><c r=\"A2\" t=\"inlineStr\"><is><t>Maintenance</t></is></c><c r=\"B2\" s=\"4\"><v>1234.5</v></c><c r=\"C2\" s=\"7\"><v>0.125</v></c><c r=\"D2\" s=\"8\"><v>1234</v></c></row><row r=\"3\"><c r=\"A3\" t=\"inlineStr\"><is><t>Dormancy</t></is></c><c r=\"B3\" s=\"5\"><v>2.01</v></c><c r=\"C3\" s=\"9\"><v>43102.57349538194</v></c><c r=\"D3\"><v>3</v></c></row></sheetData><autoFilter ref=\"A1:D3\"/></worksheet>"
+  },
+  {
+    "name": "xl/worksheets/sheet2.xml",
+    "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><dimension ref=\"A1:B1\"/><sheetData><row r=\"1\"><c r=\"A1\" t=\"inlineStr\"><is><t>Total</t></is></c><c r=\"B1\" s=\"4\"><v>1236.51</v></c></row></sheetData></worksheet>"
+  }
+]

@@ -47,6 +47,8 @@ export interface AlignmentDef {
 }
 
 export interface StyleDef {
+	/** Built-in number format id, or a custom format code such as `#,##0.00` */
+	numFmt?: number | string
 	alignment?: AlignmentDef
 	font?: FontDef
 	border?: string | BorderSides
@@ -93,6 +95,8 @@ export interface SheetObject {
 	cols?: string | ColDef[]
 	data: (Row | null)[]
 	freeze?: FreezeDef
+	/** Range with filter buttons on its first row, for example `A1:D20` */
+	autoFilter?: string
 }
 
 export type Sheet = CellValue[][] | SheetObject

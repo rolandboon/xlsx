@@ -70,6 +70,47 @@ describe("xlsx", function() {
 		assert.end()
 	})
 
+	test("number formats and auto filter", function(assert, mock) {
+		mock.swap(Date, 'now', mock.fn(1514900750001))
+		var workbook = {
+			styles: {
+				Money: { numFmt: '#,##0.00', font: { b: true } },
+				Euro: { numFmt: '"€"#,##0.00' },
+				SameMoney: { numFmt: '#,##0.00' },
+				Percent: { numFmt: 10 },
+				Count: { numFmt: '#,##0' }
+			},
+			sheets: [{
+				name: "Fee's records",
+				autoFilter: 'A1:D3',
+				data: [
+					['Category', 'Amount', 'Share', 'Count'],
+					['Maintenance', { style: 'Money', value: 1234.5 }, { style: 'Percent', value: 0.125 }, { style: 'Count', value: 1234 }],
+					['Dormancy', { style: 'Euro', value: 2.01 }, { style: 'SameMoney', format: 'date', value: new Date(1514900750001) }, 3]
+				]
+			}, { name: 'Summary', data: [['Total', { style: 'Money', value: 1236.51 }]] }]
+		}
+		, files = createFiles(workbook)
+		, styles = files.find(f => f.name === 'xl/styles.xml').content
+		, sheet = files.find(f => f.name === 'xl/worksheets/sheet1.xml').content
+		, summary = files.find(f => f.name === 'xl/worksheets/sheet2.xml').content
+		, book = files.find(f => f.name === 'xl/workbook.xml').content
+		assert.ok(styles.includes('<numFmts count="5">'), 'custom codes are listed once')
+		assert.ok(styles.includes('<numFmt numFmtId="166" formatCode="#,##0.00"/><numFmt numFmtId="167" formatCode="&quot;€&quot;#,##0.00"/><numFmt numFmtId="168" formatCode="#,##0"/>'), 'custom codes follow date formats')
+		assert.equal((styles.match(/numFmtId="166" applyNumberFormat="1"/g) || []).length, 2, 'styles share an equal code')
+		assert.ok(styles.includes('<xf numFmtId="10" applyNumberFormat="1"'), 'built-in ids pass through')
+		assert.ok(styles.includes('<xf numFmtId="164" applyNumberFormat="1" fontId="0"/>'), 'a cell date format overrides the style format')
+		assert.ok(sheet.includes('</sheetData><autoFilter ref="A1:D3"/>'), 'filter follows sheetData')
+		assert.ok(!summary.includes('<autoFilter'), 'filter stays on its sheet')
+		assert.ok(book.includes('</sheets><definedNames><definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">\'Fee\'\'s records\'!$A$1:$D$3</definedName></definedNames></workbook>'), 'filter range is a hidden sheet-scoped name')
+		assert.matchSnapshot('test/snap/formats.json', JSON.stringify(files, null, 2))
+		if (!compressionSuported) return assert.end()
+		createXlsx(workbook).then(uint8 => {
+			assert.matchSnapshot('test/snap/formats.xlsx', uint8)
+			assert.end()
+		})
+	})
+
 	test("disable formulas for untrusted text", function(assert) {
 		var files = createFiles({
 			formulas: false,

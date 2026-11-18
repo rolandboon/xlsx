@@ -38,6 +38,7 @@
 			content: xmlHead + toXml('Relationships', { xmlns: nsPackage + 'relationships' }, { Relationship })
 		})
 		, sheets = ''
+		, definedNames = ''
 		, numFmt = [
 			{ numFmtId: 164, formatCode: 'yyyy-mm-dd' },
 			{ numFmtId: 165, formatCode: 'yyyy-mm-dd hh:mm:ss' },
@@ -59,10 +60,14 @@
 			{ numFmtId: 165, applyNumberFormat: 1 },
 			{ numFmtId: 0, fontId: 1, applyFont: 1 },
 		]
+		// Built-in ids pass through; custom codes get ids from 166, after date and datetime
+		, toNumFmtId = code => isNum(code) ? code : (numFmt.find(f => f.formatCode === code) ||
+			numFmt[numFmt.push({ numFmtId: 164 + numFmt.length, formatCode: code }) - 1]).numFmtId
 		, styles = Object.entries(workbook.styles||{}).reduce((accum, a) => {
 			var newBorder = a[1].border
 			, newFill = a[1].fill
 			, newFont = a[1].font && assign({ sz: 11, name: 'Calibri' }, a[1].font)
+			, newNumFmt = a[1].numFmt
 			if (newFont && newFont.color) newFont.color = toColor(newFont.color)
 			if (isStr(newBorder)) newBorder = { left: newBorder, right: newBorder, top: newBorder, bottom: newBorder }
 			if (isStr(newFill)) newFill = { fgColor: newFill }
@@ -72,6 +77,8 @@
 				bgColor: normalizeRgb(newFill.bgColor)
 			}
 			a[1] = xf.push({
+				numFmtId: newNumFmt != null ? toNumFmtId(newNumFmt) : UNDEF,
+				applyNumberFormat: newNumFmt != null ? 1 : UNDEF,
 				alignment: a[1].alignment,
 				applyAlignment: a[1].alignment ? 1 : UNDEF,
 				fontId: newFont ? font.push(newFont) - 1 : 0,
@@ -110,6 +117,7 @@
 				, freezeCols = freeze && freeze.cols || 0
 				, freezePane = freeze && (freezeRows ? 'bottom' : 'top') + (freezeCols ? 'Right' : 'Left')
 				, pageSetup = sheet.pageSetup
+				, autoFilter = sheet.autoFilter
 				, name = 'worksheets/sheet' + i + '.xml'
 				, sheetData = sheet.data.map(
 					row => (++rowIndex, row = dataArr(row)) ? toXml('row', {
@@ -136,6 +144,10 @@
 				types.push({ PartName: '/xl/' + name, ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml' })
 				rels.push({ Id: 'rId' + i, Type: nsRels + 'worksheet', Target: name })
 				sheets += toXml('sheet', { name: sheet.name || 'Sheet' + i, sheetId: i, 'r:id': 'rId' + i })
+				// Excel keeps the filter range in a hidden name scoped to the worksheet
+				if (autoFilter) definedNames += '<definedName name="_xlnm._FilterDatabase" localSheetId="' + (i - 1) + '" hidden="1">' +
+					esc("'" + (sheet.name || 'Sheet' + i).replace(/'/g, "''") + "'!" + autoFilter.replace(/([A-Z]+)(\d+)/g, '$$$1$$$2')) +
+					'</definedName>'
 
 				return {
 					name: 'xl/' + name,
@@ -159,6 +171,7 @@
 							(w, col) => w ? assign({ min: col + 1, max: col + 1 }, isStr(w) ? { width: w, customWidth: 1 } : w) : 0
 						).filter(isTruthy)}) : '') +
 						'<sheetData>' + sheetData + '</sheetData>' +
+						(autoFilter ? toXml('autoFilter', { ref: autoFilter }) : '') +
 						(sheet.mergeCells && sheet.mergeCells.length ? toXml('mergeCells', { count: sheet.mergeCells.length }, {
 							mergeCell: sheet.mergeCells.map(ref => ({ ref }))
 						}) : '') +
@@ -212,7 +225,8 @@
 			},
 			{
 				name: 'xl/workbook.xml',
-				content: xmlHead + '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + sheets + '</sheets></workbook>'
+				content: xmlHead + '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + sheets + '</sheets>' +
+					(definedNames ? '<definedNames>' + definedNames + '</definedNames>' : '') + '</workbook>'
 			}
 		)
 		return files

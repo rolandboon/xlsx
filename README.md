@@ -70,6 +70,12 @@ Styles accept an `alignment` object, for example
 `{ alignment: { vertical: "center", wrapText: true } }`.
 Alignment is preserved when a cell also uses a date or datetime format.
 
+Styles accept a `numFmt`: a built-in format id, such as `10` for `0.00%`,
+or a custom format code, for example `{ numFmt: "#,##0.00" }`.
+A cell `format` of `date` or `datetime` takes precedence over the style format.
+
+Sheets accept `autoFilter: "A1:D20"` to add filter buttons to the first row of a range.
+
 Sheets accept `mergeCells: ["A1:D1", "B2:D2"]` to merge cell ranges.
 Place the value in the top-left cell of each range.
 

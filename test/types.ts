@@ -6,6 +6,8 @@ var workbook: Workbook = {
 		bold: { font: { sz: 11, name: "Calibri", b: true }, alignment: { vertical: "center", wrapText: true } },
 		border: { border: "thin" },
 		fill: { fill: "FFFF00" },
+		money: { numFmt: "#,##0.00" },
+		percent: { numFmt: 10 },
 	},
 	sheets: [
 		{
@@ -16,6 +18,7 @@ var workbook: Workbook = {
 			pageSetup: { paperSize: 9, orientation: "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 0 },
 			cols: [{ width: 20, bestFit: true, customWidth: true }, 0, "15"],
 			freeze: { rows: 1, cols: 0 },
+			autoFilter: "A1:C2",
 			data: [
 				["Apple", 1.99, 10],
 				["Banana", 0.99, null],
